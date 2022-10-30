@@ -22,11 +22,13 @@ async def preds(file: UploadFile = File(...)):
     image_bytes = await file.read()
     image = tf.image.decode_image(image_bytes, channels=3)
     x = tf.keras.preprocessing.image.img_to_array(image)
+    x = tf.image.resize(image, (150, 150))
     x = np.asarray([x])
     preds = model.predict(x)
     image_class = labels[np.argmax(preds)]
     
-    return {'class': image_class}
+    return {'Filename' : file.filename, 
+            'Class' : image_class}
 
 
     
